@@ -1,0 +1,41 @@
+@font-face {
+    font-family: LetterRegular; src: url('/fonts/LetterRegularPersonalUseOnly-gxZr1.otf') format(opentype);
+}
+@font-face{
+    font-family: Unicorn; src: url('/fonts/Unicorncalligraphy-xK0K.otf') format(opentype);
+}
+@font-face{
+    font-family: ChristmasCarolStar; src: url('/fonts/ChristmasCarolStarPersonalRegular-1G090.otf') format(opentype);
+}
+@font-face{
+    font-family: ChristmasMiracle; src: url('/fonts/ChristmasMiraclePersonalUse-8DZ0.ttf') format(opentype);
+}
+@font-face{
+    font-family: Geraldine; src: url('/fonts/GeraldinePersonalUseItalic-PK12m.ttf') format(truetype);
+}
+@font-face{
+    font-family: HughIsLife; src: url('/fonts/HughIsLifePersonalUseItalic-K7axe.ttf') format(truetype);
+}
+@font-face{
+    font-family: Flowerheart; src: url('/fonts/FlowerheartpersonaluseRegular-AL9e2.otf') format(opentype);
+}
+
+html,body {
+    overflow:hidden;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background-color: black;
+}
+
+.heart {
+    color: red;
+    font-family: HughIsLife;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    /*font-size: 2.5em; pixels/16=em*/
+    font-size: 2.5vw;
+    letter-spacing: .3rem;
+}

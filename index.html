@@ -11,95 +11,14 @@
         <meta property="og:url" content="">
 
         <meta name="theme-color" content="#000000">
-        <style>
-            html,body {
-                overflow:hidden;
-                margin: 0;
-                padding: 0;
-            }
-            body {
-                background-color: black;
-            }
-        </style>
+        <!-- <link rel="preload" as="font" href="/fonts/HughIsLifePersonalUseItalic-K7axe.ttf" rel="stylesheet" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="css/styles.css">
     </head>
 
     <body>
-        <script>
-            (function() {
-                var canvas = document.createElement('canvas');
-                let heart = [];
-                canvas.id = "hearts";
-                canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-                canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-                canvas.style.zIndex = 9999;
-                canvas.style.position = "absolute";
-                canvas.style.border = "1px solid rgb(50,50,50)";
-
-                window.addEventListener('resize', resize);
-
-                var ctx = canvas.getContext("2d");
-                ctx.fillStyle = "rgb(0,0,0)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                var id = ctx.getImageData(0, 0, canvas.width/2, canvas.height/2);
-                var pixels = id.data;
-
-                document.body.appendChild(canvas);
-                //ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                for (let i = 0, x, y, off, scale = 10, halfW = canvas.width / 4, halfH = canvas.height / 4; i <= 2 * Math.PI; i += 0.01) {
-                    [x,y] = heartStep(i);
-                    for (let k = 10; k >= 0; k-=0.8) {
-                        scale = k;
-                        off = (Math.floor(scale * y + halfH) * id.width + Math.floor(scale * x + halfW)) * 4;
-                        heart.push(off, off + 1, off + 2, off + 3);
-                        pixels[off + 3] = 255;
-                    }
-                }
-
-                console.log(heart.length);
-                ctx.font = "48px Arial";
-                ctx.fillStyle = "white";
-                //ctx.fillText("Hello world", 30, 390);
-                colorHeart();
-
-                function heartStep(t) {
-                    let x = 16 * Math.pow(Math.sin(t), 3)
-                      , y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
-                    return [x, -y];
-                }
-
-                function heartStep2(x) {
-                    let y = Math.sqrt(Math.cos(x));
-                    // * Math.cos(400*x) + Math.sqrt(Math.abs(x)) - 0.4 * Math.pow(4-x*x,0.1);
-                    return [x, y];
-                }
-
-                function colorHeart() {
-                    for (let i = 0, r, g, b, a; i < heart.length; i += 4) {
-                        r = heart[i];
-                        g = heart[i + 1];
-                        b = heart[i + 2];
-                        a = heart[i + 3];
-                        pixels[r] = Math.floor(Math.random() * 136 + 120);
-                        if(i%10000 === 0){
-                            pixels[g] = Math.floor(Math.random() * 100 + 5);
-                            pixels[b] = pixels[g];
-                        }else{
-                            pixels[g] = 0;
-                            pixels[b] = 0;
-                        }
-                        //pixels[a] = 255;
-                    }
-                    ctx.putImageData(id, (canvas.width/2)-(canvas.width/4), (canvas.height/2)-(canvas.height/4));
-                    requestAnimationFrame(colorHeart);
-                }
-
-                function resize() {
-                    console.log('window is resizing');
-                }
-            }
-            )();
-        </script>
+        <noscript>Javascript is required</noscript>
+        <canvas class="heart"></canvas>
+        <!-- <h1>Gisela Vazquez</h1> -->
+        <script src="index.js" type="module"></script>
     </body>
 </html>
