@@ -61,9 +61,19 @@ function stop() {
 	running = false;
 }
 
+function colorImagebackground(pixels, r=50,g=50,b=50,a=255){
+	for(let i=0; i<pixels.length; i+=4){
+		pixels[i+0] = r;
+		pixels[i+1] = g;
+		pixels[i+2] = b;
+		pixels[i+3] = a;
+	}
+}
+
 function generateHeart(){
-	id = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	id = ctx.getImageData(0, 0, canvas.width/2, canvas.height/2);
 	pixels = id.data;
+	//colorImagebackground(pixels);
 	heartPixels = generateHeartCoordinates(canvas.width/2, canvas.height/2);
 }
 
@@ -78,7 +88,7 @@ function generateHeartCoordinates(width, height) {
 	let heartPixels = [];
 	for (let i = 0, x, y, off, scale = 10, halfW = width / 2, halfH = height / 2; i <= 2 * Math.PI; i += 0.01) {
 		[x,y] = heartStep(i);
-		for (let k = 10; k >= 0; k-=0.8) {
+		for (let k = 10; k >= 0; k-=1) {
 			scale = k;
 			off = (Math.floor(scale * y + halfH) * id.width + Math.floor(scale * x + halfW)) * 4;
 			heartPixels.push(off, off + 1, off + 2, off + 3);
