@@ -62,7 +62,7 @@ function stop() {
 }
 
 function generateHeart(){
-	id = ctx.getImageData(0, 0, canvas.width/2, canvas.height/2);
+	id = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	pixels = id.data;
 	heartPixels = generateHeartCoordinates(canvas.width/2, canvas.height/2);
 }
