@@ -1,6 +1,7 @@
 let canvas,
 	heartPixels = [],
-	ctx, id, pixels, running = false;
+	ctx, imageId, pixels, audioPlayer,
+	running = false;
 
 async function loadFonts() {
 	return Promise.allSettled([
@@ -26,28 +27,39 @@ export default function create() {
 	return loadAll().then(_create);
 }
 
-function _create() {
+function _addOneCanvas() {
 	canvas = document.body.querySelector('canvas.heart');
 	if(!canvas){
 		console.warn('Canvas element not found, creating');
 		canvas = document.createElement('canvas');
+		canvas.classList.add('heart');
+		canvas.id = "hearts";
+		document.body.appendChild(canvas);
 	}
-	canvas.id = "hearts";
+}
+
+function _create() {
+	_addOneCanvas();
+
+	audioPlayer = document.body.querySelector('audio');
 	canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 	canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-	canvas.style.zIndex = 9999;
-	canvas.style.position = "absolute";
-	canvas.style.border = "1px solid rgb(50,50,50)";
-
+	canvas.addEventListener('click', _toggleAudio);
 	ctx = canvas.getContext("2d");
 	ctx.fillStyle = "rgb(0,0,0)";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 	run();
 
-	document.body.appendChild(canvas);
 	window.addEventListener('resize', resize);
+}
+
+function _toggleAudio() {
+	audioPlayer.muted = !audioPlayer.muted;
+}
+
+function stop() {
+	running = false;
 }
 
 function run() {
@@ -57,23 +69,10 @@ function run() {
 	colorHeart();
 }
 
-function stop() {
-	running = false;
-}
-
-function colorImagebackground(pixels, r=50,g=50,b=50,a=255){
-	for(let i=0; i<pixels.length; i+=4){
-		pixels[i+0] = r;
-		pixels[i+1] = g;
-		pixels[i+2] = b;
-		pixels[i+3] = a;
-	}
-}
-
 function generateHeart(){
-	id = ctx.getImageData(0, 0, canvas.width/2, canvas.height/2);
-	pixels = id.data;
-	//colorImagebackground(pixels);
+	imageId = ctx.getImageData(0, 0, canvas.width/2, canvas.height/2);
+	pixels = imageId.data;
+	_initPixelData(pixels);
 	heartPixels = generateHeartCoordinates(canvas.width/2, canvas.height/2);
 }
 
@@ -84,15 +83,18 @@ function drawName(fname, lname){
 	ctx.fillText(lname, canvas.width/2- ctx.measureText(fname).width/2, canvas.height/2 + 48);
 }
 
+function _initPixelData(data) {
+	return _colorImagebackground(data, 0,0,0,255);
+}
+
 function generateHeartCoordinates(width, height) {
 	let heartPixels = [];
 	for (let i = 0, x, y, off, scale = 10, halfW = width / 2, halfH = height / 2; i <= 2 * Math.PI; i += 0.01) {
 		[x,y] = heartStep(i);
 		for (let k = 10; k >= 0; k-=1) {
 			scale = k;
-			off = (Math.floor(scale * y + halfH) * id.width + Math.floor(scale * x + halfW)) * 4;
+			off = (Math.floor(scale * y + halfH) * imageId.width + Math.floor(scale * x + halfW)) * 4;
 			heartPixels.push(off, off + 1, off + 2, off + 3);
-			pixels[off + 3] = 255;
 		}
 	}
 
@@ -122,9 +124,19 @@ function colorHeart() {
 		}
 		//pixels[a] = 255;
 	}
-	ctx.putImageData(id, (canvas.width/2)-(canvas.width/4), (canvas.height/2)-(canvas.height/4));
+	ctx.putImageData(imageId, (canvas.width/2)-(canvas.width/4), (canvas.height/2)-(canvas.height/4));
 	drawName('Gisela', 'Vazquez');
 	if(running) requestAnimationFrame(colorHeart);
+}
+
+function _colorImagebackground(pixels, r=50,g=50,b=50,a=255){
+	for(let i=0; i<pixels.length; i+=4){
+		pixels[i+0] = r;
+		pixels[i+1] = g;
+		pixels[i+2] = b;
+		pixels[i+3] = a;
+	}
+	return pixels;
 }
 
 function resize() {

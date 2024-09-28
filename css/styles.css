@@ -20,12 +20,12 @@
     font-family: Flowerheart; src: url('/fonts/FlowerheartpersonaluseRegular-AL9e2.otf') format(opentype);
 }
 
-html,body {
-    overflow:hidden;
+html, body {
     margin: 0;
     padding: 0;
 }
 body {
+    overflow:hidden;
     background-color: black;
 }
 
@@ -38,4 +38,22 @@ body {
     /*font-size: 2.5em; pixels/16=em*/
     font-size: 2.5vw;
     letter-spacing: .3rem;
+}
+
+#container {
+    position: relative;
+}
+#container canvas, #container .overlay {
+    position: absolute;
+}
+canvas {
+    border: 1px solid rgb(50,50,50);
+}
+
+.player {
+}
+
+.hidden {
+    visibility: hidden;
+    display: none;
 }

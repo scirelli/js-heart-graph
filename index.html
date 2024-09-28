@@ -17,8 +17,16 @@
 
     <body>
         <noscript>Javascript is required</noscript>
-        <canvas class="heart"></canvas>
         <!-- <h1>Gisela Vazquez</h1> -->
+        <div id="container">
+            <canvas id="hearts" class="heart"></canvas>
+            <div class="overlay">
+                <audio class="player hidden" controls autoplay>
+                    <source src="/audio/Tangled_I_See_The_Light.ogg" type="audio/ogg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
         <script src="index.js" type="module"></script>
     </body>
 </html>
