@@ -57,3 +57,15 @@ canvas {
     visibility: hidden;
     display: none;
 }
+
+.console {
+    position: relative;
+    margin-top: 88vh;
+    margin-left: 5px;
+    border: 5px groove #040404;
+    color: green;
+    width: 98vw;
+    height: 10vh;
+    padding: 3px;
+    overflow:auto;
+}

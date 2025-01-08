@@ -1,9 +1,14 @@
+import Heart from './Heart.mjs';
+
+
 let canvas,
-	heartPixels = [],
+	heartBytes = [],
+	unitHeart = new Heart(),
 	ctx, imageId, pixels, audioPlayer,
 	running = false;
 
-async function loadFonts() {
+
+async function _loadFonts() {
 	return Promise.allSettled([
 		new FontFace('HughIsLife', 'url(/fonts/HughIsLifePersonalUseItalic-K7axe.ttf)').load()
 	])
@@ -17,14 +22,14 @@ async function loadFonts() {
 		});
 }
 
-async function loadAll() {
+async function _loadAll() {
 	return Promise.allSettled([
-		loadFonts()
+		_loadFonts()
 	]);
 }
 
 export default function create() {
-	return loadAll().then(_create);
+	return _loadAll().then(_create);
 }
 
 function _addOneCanvas() {
@@ -42,6 +47,14 @@ function _create() {
 	_addOneCanvas();
 
 	audioPlayer = document.body.querySelector('audio');
+	if(window.location.searchObj.debug){
+		audioPlayer.pause();
+		document.body.querySelectorAll('.overlay.hidden').forEach(e=>{
+			e.classList.remove('hidden');
+			console.log(e);
+		});
+	}
+
 	canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 	canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 	canvas.addEventListener('click', _toggleAudio);
@@ -73,7 +86,7 @@ function generateHeart(){
 	imageId = ctx.getImageData(0, 0, canvas.width/2, canvas.height/2);
 	pixels = imageId.data;
 	_initPixelData(pixels);
-	heartPixels = generateHeartCoordinates(canvas.width/2, canvas.height/2);
+	heartBytes = generateHeartCoordinates(canvas.width/2, canvas.height/2);
 }
 
 function drawName(fname, lname){
@@ -84,22 +97,36 @@ function drawName(fname, lname){
 }
 
 function _initPixelData(data) {
+	if(window.location.searchObj.debug) {
+		return _colorImagebackground(data, 10,10,10,255);
+	}
+
 	return _colorImagebackground(data, 0,0,0,255);
 }
 
+function coordToIndex(x, y, width) {
+			return (y * width + x) * 4 /*bytes per pixel*/;
+}
+
+function pixelToIndex(p, width) {
+	return coordToIndex(p.x, p.y, width);
+}
+
+
 function generateHeartCoordinates(width, height) {
-	let heartPixels = [];
+	let heartBytes = [];
 	for (let i = 0, x, y, off, scale = 10, halfW = width / 2, halfH = height / 2; i <= 2 * Math.PI; i += 0.01) {
 		[x,y] = heartStep(i);
 		for (let k = 10; k >= 0; k-=1) {
 			scale = k;
-			off = (Math.floor(scale * y + halfH) * imageId.width + Math.floor(scale * x + halfW)) * 4;
-			heartPixels.push(off, off + 1, off + 2, off + 3);
+			//off = (Math.floor(scale * y + halfH) * imageId.width + Math.floor(scale * x + halfW)) * 4;
+			off = coordToIndex(Math.floor(scale * x + halfW), Math.floor(scale * y + halfH), imageId.width);
+			heartBytes.push(off, off + 1, off + 2, off + 3);
 		}
 	}
 
-	console.log(heartPixels.length);
-	return heartPixels;
+	console.log(heartBytes.length);
+	return heartBytes;
 }
 
 function heartStep(t) {
@@ -109,11 +136,11 @@ function heartStep(t) {
 }
 
 function colorHeart() {
-	for (let i = 0, r, g, b, a; i < heartPixels.length; i += 4) {
-		r = heartPixels[i];
-		g = heartPixels[i + 1];
-		b = heartPixels[i + 2];
-		a = heartPixels[i + 3];
+	for (let i = 0, r, g, b, a; i < heartBytes.length; i += 4) {
+		r = heartBytes[i];
+		g = heartBytes[i + 1];
+		b = heartBytes[i + 2];
+		a = heartBytes[i + 3];
 		pixels[r] = Math.floor(Math.random() * 136 + 120);
 		if(i%10000 === 0){
 			pixels[g] = Math.floor(Math.random() * 100 + 5);
